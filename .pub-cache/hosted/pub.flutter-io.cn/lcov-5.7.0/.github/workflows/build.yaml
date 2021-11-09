@@ -1,0 +1,28 @@
+name: build
+on:
+  push:
+  schedule:
+    - cron: '0 0 1 * *'
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Dart
+        uses: cedx/setup-dart@v1
+      - name: Check environment
+        run: |
+          dart --version
+          pub --version
+      - name: Fetch sources
+        uses: actions/checkout@v2
+      - name: Install dependencies
+        run: |
+          pub global activate coveralls
+          pub get
+      - name: Run tests
+        run: pub run grinder test
+      - name: Collect code coverage
+        env:
+          COVERALLS_REPO_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        if: success()
+        run: pub run grinder coverage

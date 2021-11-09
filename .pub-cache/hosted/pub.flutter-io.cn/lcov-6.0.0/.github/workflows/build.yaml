@@ -1,0 +1,31 @@
+name: build
+on:
+  pull_request:
+  push:
+  schedule:
+    - cron: "0 0 1 * *"
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Dart
+        uses: cedx/setup-dart@v2
+      - name: Check environment
+        run: |
+          dart --version
+          pub --version
+      - name: Fetch sources
+        uses: actions/checkout@v2
+      - name: Install dependencies
+        run: |
+          pub global activate coveralls
+          pub get
+      - name: Run tests
+        run: pub run test --coverage=var
+      - name: Collect code coverage
+        env:
+          COVERALLS_REPO_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        if: success()
+        run: |
+          pub run coverage:format_coverage --in=var/test --lcov --out=var/lcov.info --packages=.dart_tool/package_config.json --report-on=lib
+          pub global run coveralls var/lcov.info

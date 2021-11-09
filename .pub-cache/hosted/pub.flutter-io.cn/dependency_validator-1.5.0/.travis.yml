@@ -1,0 +1,15 @@
+language: dart
+
+dart:
+  - stable
+  - dev
+
+script:
+  - dartanalyzer .
+  - dartfmt -l 120 -n --set-exit-if-changed .
+  - pub run dependency_validator -i _foo,foo,_bar,bar,foo1,foo_foo
+  - pub run test
+
+cache:
+ directories:
+   - $HOME/.pub-cache

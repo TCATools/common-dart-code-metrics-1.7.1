@@ -1,0 +1,17 @@
+* text=auto
+.* text
+
+*.dart text
+*.http text
+*.info text
+*.json text
+*.md text
+*.ps1 text
+*.txt text
+*.yaml text
+*.yml text
+
+*.ico binary
+*.jpg binary
+*.pdf binary
+*.png binary
